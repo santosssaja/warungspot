@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        // 4. Send Result
+        // 5. Send Result
         sendMessage('progress', { step: 'complete', message: '✨ Analisis selesai!' })
         sendMessage('success', result)
         controller.close()

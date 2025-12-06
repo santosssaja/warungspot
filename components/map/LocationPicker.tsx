@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { MapPin, Crosshair } from 'lucide-react'
+import { Crosshair } from 'lucide-react'
 
 // Fix Leaflet icon issue
 const icon = new L.Icon({
