@@ -5,8 +5,9 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Store, ArrowLeft, MapPin, Search } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import ShopDetailModal from '@/components/shop/ShopDetailModal'
 
-const MapComponent = dynamic(() => import('@/components/MapComponent'), {
+const MapComponent = dynamic(() => import('@/components/map/MapComponent'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full flex items-center justify-center bg-gray-100">
@@ -26,12 +27,16 @@ interface Shop {
   latitude: number
   longitude: number
   phone_number?: string
+  address_clue?: string
+  banner_image_url?: string
+  product_images_urls?: string[]
 }
 
 export default function ExplorePage() {
   const [shops, setShops] = useState<Shop[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedShop, setSelectedShop] = useState<Shop | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -59,6 +64,7 @@ export default function ExplorePage() {
           latitude: -6.2088,
           longitude: 106.8456,
           phone_number: '081234567890',
+          address_clue: 'Depan Stasiun Manggarai'
         },
         {
           id: '2',
@@ -68,15 +74,7 @@ export default function ExplorePage() {
           latitude: -6.2098,
           longitude: 106.8466,
           phone_number: '081234567891',
-        },
-        {
-          id: '3',
-          shop_name: 'Toko Kelontong Bu Ani',
-          category: 'Kelontong',
-          marketing_desc: 'Lengkap dari A sampai Z! Harga bersahabat, pelayanan ramah. Kebutuhan sehari-hari ada semua! 🛒',
-          latitude: -6.2078,
-          longitude: 106.8446,
-          phone_number: '081234567892',
+          address_clue: 'Samping Indomaret'
         },
       ])
     } finally {
@@ -116,7 +114,7 @@ export default function ExplorePage() {
               placeholder="Cari toko atau kategori..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 placeholder-gray-400"
             />
           </div>
         </div>
@@ -132,7 +130,10 @@ export default function ExplorePage() {
             </div>
           </div>
         ) : (
-          <MapComponent shops={filteredShops} />
+          <MapComponent
+            shops={filteredShops}
+            onShopClick={setSelectedShop}
+          />
         )}
 
         {/* Stats Overlay */}
@@ -153,10 +154,14 @@ export default function ExplorePage() {
             <h3 className="font-bold text-lg mb-3">Daftar Toko ({filteredShops.length})</h3>
             <div className="space-y-3">
               {filteredShops.map((shop) => (
-                <div key={shop.id} className="p-3 bg-orange-50 rounded-lg">
+                <div
+                  key={shop.id}
+                  onClick={() => setSelectedShop(shop)}
+                  className="p-3 bg-orange-50 rounded-lg active:bg-orange-100 cursor-pointer"
+                >
                   <h4 className="font-semibold text-orange-900">{shop.shop_name}</h4>
                   <p className="text-sm text-orange-700">{shop.category}</p>
-                  <p className="text-xs text-gray-600 mt-1">{shop.marketing_desc}</p>
+                  <p className="text-xs text-gray-600 mt-1 line-clamp-1">{shop.marketing_desc}</p>
                 </div>
               ))}
             </div>
@@ -170,17 +175,18 @@ export default function ExplorePage() {
           </div>
           <div className="p-4 space-y-3">
             {filteredShops.map((shop) => (
-              <div key={shop.id} className="p-4 bg-orange-50 rounded-xl hover:bg-orange-100 transition-colors">
+              <div
+                key={shop.id}
+                onClick={() => setSelectedShop(shop)}
+                className="p-4 bg-orange-50 rounded-xl hover:bg-orange-100 transition-colors cursor-pointer"
+              >
                 <h4 className="font-semibold text-orange-900 mb-1">{shop.shop_name}</h4>
                 <p className="text-sm text-orange-700 mb-2">{shop.category}</p>
-                <p className="text-sm text-gray-700 mb-3">{shop.marketing_desc}</p>
+                <p className="text-sm text-gray-700 mb-3 line-clamp-2">{shop.marketing_desc}</p>
                 {shop.phone_number && (
-                  <a
-                    href={`tel:${shop.phone_number}`}
-                    className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
-                  >
+                  <div className="inline-flex items-center gap-1 text-sm text-blue-600">
                     📞 {shop.phone_number}
-                  </a>
+                  </div>
                 )}
               </div>
             ))}
@@ -201,6 +207,14 @@ export default function ExplorePage() {
           <span className="hidden sm:inline">Tambah Toko</span>
         </Link>
       </div>
+
+      {/* Detail Modal */}
+      {selectedShop && (
+        <ShopDetailModal
+          shop={selectedShop}
+          onClose={() => setSelectedShop(null)}
+        />
+      )}
     </div>
   )
 }

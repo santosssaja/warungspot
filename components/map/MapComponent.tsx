@@ -14,12 +14,16 @@ interface Shop {
   latitude: number
   longitude: number
   phone_number?: string
+  address_clue?: string
+  banner_image_url?: string
+  product_images_urls?: string[]
 }
 
 interface MapComponentProps {
   shops?: Shop[]
   center?: [number, number]
   zoom?: number
+  onShopClick?: (shop: Shop) => void
 }
 
 // Custom icon for user location
@@ -88,7 +92,7 @@ function LocationMarker({ onLocationFound }: { onLocationFound?: (latlng: [numbe
   )
 }
 
-export default function MapComponent({ shops = [], center, zoom = 13 }: MapComponentProps) {
+export default function MapComponent({ shops = [], center, zoom = 13, onShopClick }: MapComponentProps) {
   const [userLocation, setUserLocation] = useState<[number, number]>(center || [-6.2088, 106.8456])
   const [isClient, setIsClient] = useState(false)
 
@@ -119,28 +123,37 @@ export default function MapComponent({ shops = [], center, zoom = 13 }: MapCompo
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <LocationMarker onLocationFound={setUserLocation} />
-      
+
       {shops.map((shop) => (
         <Marker
           key={shop.id}
           position={[shop.latitude, shop.longitude]}
           icon={shopIcon}
+          eventHandlers={{
+            click: () => {
+              if (onShopClick) {
+                onShopClick(shop)
+              }
+            },
+          }}
         >
-          <Popup>
-            <div className="min-w-[200px]">
-              <h3 className="font-bold text-lg text-orange-600 mb-1">{shop.shop_name}</h3>
-              <p className="text-sm text-gray-500 mb-2">{shop.category}</p>
-              <p className="text-sm text-gray-700 mb-3">{shop.marketing_desc}</p>
-              {shop.phone_number && (
-                <a 
-                  href={`tel:${shop.phone_number}`}
-                  className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
-                >
-                  📞 {shop.phone_number}
-                </a>
-              )}
-            </div>
-          </Popup>
+          {!onShopClick && (
+            <Popup>
+              <div className="min-w-[200px]">
+                <h3 className="font-bold text-lg text-orange-600 mb-1">{shop.shop_name}</h3>
+                <p className="text-sm text-gray-500 mb-2">{shop.category}</p>
+                <p className="text-sm text-gray-700 mb-3">{shop.marketing_desc}</p>
+                {shop.phone_number && (
+                  <a
+                    href={`tel:${shop.phone_number}`}
+                    className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    📞 {shop.phone_number}
+                  </a>
+                )}
+              </div>
+            </Popup>
+          )}
         </Marker>
       ))}
     </MapContainer>
