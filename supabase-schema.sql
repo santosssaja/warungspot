@@ -24,6 +24,14 @@ CREATE TABLE IF NOT EXISTS shops (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Add location column if it doesn't exist (for existing tables)
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'shops' AND column_name = 'location') THEN
+        ALTER TABLE shops ADD COLUMN location geography(Point, 4326);
+    END IF;
+END $$;
+
 -- Create indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_shops_user_id ON shops(user_id);
 CREATE INDEX IF NOT EXISTS idx_shops_category ON shops(category);
