@@ -88,7 +88,7 @@ export default function ExplorePage() {
   )
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-[100dvh] flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 z-10 shadow-sm">
         <div className="container mx-auto px-4 py-4">
