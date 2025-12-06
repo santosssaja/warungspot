@@ -9,6 +9,9 @@
 ### Demo Landing Page
 ![Landing Page Website](img/landing-page.jpg)
 
+### Demo Video
+[Link Demo Video di Google Drive](https://drive.google.com/file/d/1X4nZ10hKl2ENXiVQLrRI1r3Yrgy-HjqX/view?usp=drivesdk)
+
 ---
 
 ## 🚀 Quick Start
