@@ -63,7 +63,7 @@ export default function LoginForm() {
           <h1 className="text-3xl font-bold text-gray-900">WarungSpot</h1>
         </div>
 
-        <h2 className="text-2xl font-bold text-center mb-2">Selamat Datang!</h2>
+        <h2 className="text-2xl font-bold text-center mb-2 text-gray-900">Selamat Datang!</h2>
         <p className="text-gray-600 text-center mb-6">
           Masuk untuk menambahkan toko Anda ke peta
         </p>
@@ -78,7 +78,7 @@ export default function LoginForm() {
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition-colors mb-6 font-semibold disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 bg-white rounded-xl hover:bg-gray-50 transition-colors mb-6 font-semibold text-gray-700 shadow-sm disabled:opacity-50"
         >
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -130,7 +130,7 @@ export default function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="nama@email.com"
               />
             </div>
@@ -148,7 +148,7 @@ export default function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="••••••••"
               />
             </div>
@@ -178,7 +178,7 @@ export default function LoginForm() {
         </p>
 
         <div className="mt-6 pt-6 border-t border-gray-200">
-          <Link 
+          <Link
             href="/"
             className="text-center block text-sm text-gray-600 hover:text-gray-900"
           >
