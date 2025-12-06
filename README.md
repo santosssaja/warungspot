@@ -6,6 +6,12 @@
 
 **WarungSpot** adalah platform AI yang membantu UMKM mendigitalkan toko mereka secara instan. Cukup upload **satu foto spanduk**, AI kami akan mengekstrak data (Nama, No HP, Kategori) dan mendaftarkannya ke peta interaktif.
 
+### Demo Landing Page
+![Landing Page Website](img/landing-page.jpg)
+
+### Demo Video
+[Link Demo Video di Google Drive](https://drive.google.com/file/d/1X4nZ10hKl2ENXiVQLrRI1r3Yrgy-HjqX/view?usp=drivesdk)
+
 ---
 
 ## 🚀 Quick Start
