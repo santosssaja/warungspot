@@ -16,6 +16,8 @@ npm install
 Buat project baru di [Supabase Dashboard](https://supabase.com/dashboard).
 Masukkan query SQL di [SQL Editor](https://supabase.com/dashboard/sql-editor): dari file `supabase-schema.sql`.
 
+> **Google Login**: Untuk setup login Google, lihat [docs/SETUP_GOOGLE_LOGIN.md](SETUP_GOOGLE_LOGIN.md).
+
 ## 3. Environment Variables
 Copy `.env.example` ke `.env.local`:
 ```bash

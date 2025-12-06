@@ -40,6 +40,7 @@
 
 -   **[🛠️ Setup Guide](docs/SETUP.md)**: Cara instalasi, database schema, dan konfigurasi keys.
 -   **[🏗️ Architecture](docs/ARCHITECTURE.md)**: Struktur project, tech stack, dan komponen utama.
+-   **[🔐 Google Login Setup](docs/SETUP_GOOGLE_LOGIN.md)**: Panduan konfigurasi Login with Google.
 -   **[🔌 API Reference](docs/API.md)**: Dokumentasi endpoint AI Analysis.
 -   **[✅ Testing Checklist](docs/TESTING.md)**: Daftar fitur yang perlu ditest.
 
