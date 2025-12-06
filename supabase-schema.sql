@@ -1,6 +1,10 @@
 -- WarungSpot Database Schema
 -- Run this SQL in your Supabase SQL Editor
 
+-- Enable extensions for spatial queries and text search
+CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- Create shops table
 CREATE TABLE IF NOT EXISTS shops (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -12,16 +16,24 @@ CREATE TABLE IF NOT EXISTS shops (
   marketing_desc TEXT NOT NULL,
   latitude DECIMAL(10, 8) NOT NULL,
   longitude DECIMAL(11, 8) NOT NULL,
+  -- Add PostGIS geography column for efficient spatial queries
+  location geography(Point, 4326),
   banner_image_url TEXT,
   product_images_urls TEXT[],
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create index for better query performance
+-- Create indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_shops_user_id ON shops(user_id);
 CREATE INDEX IF NOT EXISTS idx_shops_category ON shops(category);
 CREATE INDEX IF NOT EXISTS idx_shops_created_at ON shops(created_at DESC);
+
+-- Spatial index for "shops near me" queries
+CREATE INDEX IF NOT EXISTS idx_shops_location ON shops USING GIST(location);
+
+-- Text search index for shop name (fuzzy search)
+CREATE INDEX IF NOT EXISTS idx_shops_name_trgm ON shops USING GIN(shop_name gin_trgm_ops);
 
 -- Enable Row Level Security
 ALTER TABLE shops ENABLE ROW LEVEL SECURITY;
@@ -97,3 +109,20 @@ CREATE TRIGGER update_shops_updated_at
   BEFORE UPDATE ON shops
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
+
+-- Function to sync latitude/longitude to location column
+CREATE OR REPLACE FUNCTION sync_shops_location()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Create a point from longitude and latitude
+  -- Note: ST_MakePoint takes (longitude, latitude)
+  NEW.location = ST_SetSRID(ST_MakePoint(NEW.longitude, NEW.latitude), 4326)::geography;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to automatically sync location from lat/long
+CREATE TRIGGER sync_shops_location_trigger
+  BEFORE INSERT OR UPDATE OF latitude, longitude ON shops
+  FOR EACH ROW
+  EXECUTE FUNCTION sync_shops_location();
